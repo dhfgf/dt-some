@@ -10,7 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
 		return arr;
 	}
 
-	console.log('It\'s alive');
+	//console.log('It\'s alive');
 
 	let disposable = vscode.commands.registerTextEditorCommand('dt-some.activate', (textEditor) => {
 		var document = textEditor.document;
@@ -59,10 +59,11 @@ export function activate(context: vscode.ExtensionContext) {
 			newLines.push(begin + line + end);
 		});
 		text = "<body>\n" + newLines.join('<br>\n') + "\n</body>";
-		console.log(text);
+		//console.log(text);
 		
-		var title = "<head>\n<title>" + document.fileName + "</title>\n</head>\n";
-
+		var fileName = document.fileName.split('\\').pop();
+		var title = "<head>\n<title>" + fileName + "</title>\n</head>\n";
+		
 		textEditor.edit((editBuilder) => {
 			var lastLine = document.lineAt(document.lineCount - 1);
 		  
@@ -81,5 +82,5 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-	console.log('Done');
+	//console.log('Done');
 }
