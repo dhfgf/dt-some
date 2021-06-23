@@ -1,6 +1,4 @@
-import { stringify } from 'querystring';
 import * as vscode from 'vscode';
-import { Z_ASCII } from 'zlib';
 
 export function activate(context: vscode.ExtensionContext) {
 	function format(line: string, toFormat: string) {
@@ -10,8 +8,6 @@ export function activate(context: vscode.ExtensionContext) {
 		return arr;
 	}
 
-	//console.log('It\'s alive');
-
 	let disposable = vscode.commands.registerTextEditorCommand('dt-some.activate', (textEditor) => {
 		var document = textEditor.document;
 		var text = document.getText();
@@ -20,46 +16,43 @@ export function activate(context: vscode.ExtensionContext) {
 		lines.forEach(line => {
 			let begin = "", end = "";
 			while (line.startsWith('#')) {
-				if (line.startsWith('#uc ')) {
-					line = line.replace('#uc ', '').toUpperCase();
-				} else if (line.startsWith('#lc ')) {
-					line = line.replace('#lc ', '').toLowerCase();
-				} else if (line.startsWith('#b ')) {
+				if (line.startsWith('#b ')) {
 					let toFormat = 'b';
 					let arr = format(line, toFormat);
 					begin = arr[0] + begin;
 					line = arr[1];
 					end = end + arr[2];
-				} else if (line.startsWith('#u')) {
+				} else if (line.startsWith('#u ')) {
 					let toFormat = 'u';
 					let arr = format(line, toFormat);
 					begin = arr[0] + begin;
 					line = arr[1];
 					end = end + arr[2];
-				} else if (line.startsWith('#i')) {
+				} else if (line.startsWith('#i ')) {
 					let toFormat = 'i';
 					let arr = format(line, toFormat);
 					begin = arr[0] + begin;
 					line = arr[1];
 					end = end + arr[2];
-				} else if (line.startsWith('#h1')) {
+				} else if (line.startsWith('#h1 ')) {
 					let toFormat = 'h1';
 					let arr = format(line, toFormat);
 					begin = arr[0] + begin;
 					line = arr[1];
 					end = end + arr[2];
-				} else if (line.startsWith('#h2')) {
+				} else if (line.startsWith('#h2 ')) {
 					let toFormat = 'h2';
 					let arr = format(line, toFormat);
 					begin = arr[0] + begin;
 					line = arr[1];
 					end = end + arr[2];
+				} else {
+					break;
 				}
 			}
 			newLines.push(begin + line + end);
 		});
 		text = "<body>\n" + newLines.join('<br>\n') + "\n</body>";
-		//console.log(text);
 		
 		var fileName = document.fileName.split('\\').pop();
 		var title = "<head>\n<title>" + fileName + "</title>\n</head>\n";
@@ -79,8 +72,4 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(disposable);
-}
-
-export function deactivate() {
-	//console.log('Done');
 }
